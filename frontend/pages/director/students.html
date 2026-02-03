@@ -50,8 +50,32 @@
                 <span class="director-pill">ค้นหา/กรอง</span>
             </div>
             <div class="director-search">
-                <input type="text" id="studentSearch" placeholder="ค้นหา ชื่อ รหัส ห้อง">
-                <button class="btn-primary" id="searchStudentBtn">ค้นหา</button>
+                <div>
+                    <label>ระดับชั้น</label>
+                    <select id="classLevelFilter" class="custom-select">
+                        <option value="">ทั้งหมด</option>
+                        <option value="ม.1">ม.1</option>
+                        <option value="ม.2">ม.2</option>
+                        <option value="ม.3">ม.3</option>
+                        <option value="ม.4">ม.4</option>
+                        <option value="ม.5">ม.5</option>
+                        <option value="ม.6">ม.6</option>
+                    </select>
+                </div>
+                <div>
+                    <label>ห้อง</label>
+                    <select id="roomFilter" class="custom-select">
+                        <option value="">ทั้งหมด</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                    </select>
+                </div>
+                <div class="director-filter-action">
+                    <button class="btn-primary" id="searchStudentBtn">แสดงรายชื่อ</button>
+                </div>
             </div>
         </section>
 

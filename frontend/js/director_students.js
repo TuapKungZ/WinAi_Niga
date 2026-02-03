@@ -19,12 +19,18 @@ window.onload = async () => {
 };
 
 async function loadStudents() {
-    const keyword = qs("#studentSearch").value.trim();
-    setState(qs("#studentsBody"), "loading", "กำลังโหลดข้อมูล...");
-    const res = await fetch(`${API_BASE}/director/students?search=${encodeURIComponent(keyword)}`);
+    const level = qs("#classLevelFilter")?.value || "";
+    const room = qs("#roomFilter")?.value || "";
+    const params = new URLSearchParams();
+    if (level) params.set("class_level", level);
+    if (room) params.set("room", room);
+
+    setState(qs("#studentsBody"), "loading", "???????????????...");
+    const res = await fetch(`${API_BASE}/director/students?${params.toString()}`);
     currentList = await res.json();
     renderStudents();
 }
+
 
 function renderStudents() {
     const body = qs("#studentsBody");
