@@ -7,19 +7,11 @@
     clearFieldErrors,
     setFieldError
 } from "./app.js";
+import { API_BASE } from "./config.js";
 
 let student;
 let selectedSection = null;
-
-// คำถามประเมิน
-const questions = [
-    "ครูมีการเตรียมการสอน และเข้าสอนตรงเวลา",
-    "อธิบายเนื้อหาได้ชัดเจน ยกตัวอย่างเข้าใจง่าย",
-    "ใช้สื่อการสอนได้เหมาะสม",
-    "เปิดโอกาสให้นักเรียนถาม/แสดงความคิดเห็น",
-    "ให้คำแนะนำ/ช่วยเหลือเมื่อมีปัญหา",
-    "ตรวจงานและให้ผลย้อนกลับอย่างเหมาะสม"
-];
+let topics = [];
 
 // ----------------------------
 // เมื่อโหลดหน้า
@@ -40,7 +32,6 @@ window.onload = async () => {
 // โหลดรายวิชาที่นักเรียนลงทะเบียน
 // ----------------------------
 async function loadStudentSubjects() {
-
     const year = qs("#evalYearSelect").value;
     const term = qs("#evalTermSelect").value;
 
@@ -52,10 +43,11 @@ async function loadStudentSubjects() {
     if (!subjects.length) {
         select.innerHTML = `<option disabled selected value="">ยังไม่มีรายวิชาที่บันทึกแล้ว</option>`;
         resetTeacherCard();
+        await loadTopics();
         return;
     }
 
-    subjects.forEach(sub => {
+    subjects.forEach((sub) => {
         const op = document.createElement("option");
         op.value = sub.section_id;
         op.textContent = `${sub.subject_code} - ${sub.subject_name}`;
@@ -65,13 +57,13 @@ async function loadStudentSubjects() {
     });
 
     resetTeacherCard();
+    await loadTopics();
 }
 
 // ----------------------------
 // เมื่อเลือกวิชา
 // ----------------------------
 async function selectSubject() {
-
     const option = qs("#subjectSelect").selectedOptions[0];
     if (!option) return;
 
@@ -92,7 +84,6 @@ async function selectSubject() {
 // เช็คสถานะประเมินแล้วหรือยัง
 // ----------------------------
 async function loadEvaluationStatus() {
-
     const year = qs("#evalYearSelect").value;
     const term = qs("#evalTermSelect").value;
 
@@ -112,15 +103,50 @@ async function loadEvaluationStatus() {
 }
 
 // ----------------------------
+// โหลดหัวข้อประเมินจากผอ
+// ----------------------------
+async function loadTopics() {
+    const year = qs("#evalYearSelect").value;
+    const term = qs("#evalTermSelect").value;
+    const body = qs("#evalQuestions");
+    body.innerHTML = `
+        <tr>
+            <td colspan="6" style="text-align:center; padding:20px; color:#777;">
+                กำลังโหลดหัวข้อ...
+            </td>
+        </tr>
+    `;
+
+    const params = new URLSearchParams();
+    if (year) params.append("year", year);
+    if (term) params.append("semester", term);
+
+    const res = await fetch(`${API_BASE}/evaluation/topics?${params.toString()}`);
+    const rows = await res.json();
+    topics = (rows || []).map((r) => r.name).filter((name) => name && String(name).trim().length > 0);
+
+    renderQuestions();
+}
+
+// ----------------------------
 // วาดคำถาม
 // ----------------------------
 function renderQuestions() {
-
     const body = qs("#evalQuestions");
     body.innerHTML = "";
 
-    questions.forEach((q, index) => {
+    if (!topics.length) {
+        body.innerHTML = `
+            <tr>
+                <td colspan="6" style="text-align:center; padding:20px; color:#777;">
+                    ยังไม่มีหัวข้อประเมิน
+                </td>
+            </tr>
+        `;
+        return;
+    }
 
+    topics.forEach((q, index) => {
         const tr = document.createElement("tr");
 
         tr.innerHTML = `
@@ -148,12 +174,16 @@ async function submitForm(event) {
         return;
     }
 
+    if (!topics.length) {
+        alert("ยังไม่มีหัวข้อประเมิน");
+        return;
+    }
+
     const year = qs("#evalYearSelect").value;
     const term = qs("#evalTermSelect").value;
     const feedback = qs("#evalFeedback")?.value?.trim() || "";
 
-    // รวมคะแนน
-    const data = questions.map((q, i) => ({
+    const data = topics.map((q, i) => ({
         name: q,
         score: Number(document.querySelector(`input[name="q${i}"]:checked`).value)
     }));

@@ -1,5 +1,5 @@
-import { requireDirectorLogin, qs, setState, clearFieldErrors, setFieldError, getDirector, openModal } from "./app.js";
-import { API_BASE, FILE_BASE } from "./config.js";
+﻿import { requireDirectorLogin, qs, setState, clearFieldErrors, setFieldError, getDirector, openModal } from "./app.js";
+import { API_BASE } from "./config.js";
 
 let studentList = [];
 let studentEvalRows = [];
@@ -31,6 +31,7 @@ window.onload = async () => {
 
     qs("#evalTopicBody").addEventListener("click", handleTopicActions);
     qs("#evalStudentBody").addEventListener("click", handleStudentRowActions);
+    qs("#addTopicBtn").addEventListener("click", addTopic);
 
     await loadStudents();
     await loadEvaluation();
@@ -92,7 +93,7 @@ async function loadTopics() {
     body.innerHTML = "";
 
     if (!rows.length) {
-        body.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:20px;">ไม่มีข้อมูลหัวข้อ</td></tr>`;
+        body.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:20px;">ยังไม่มีหัวข้อ</td></tr>`;
         return;
     }
 
@@ -239,13 +240,13 @@ async function saveStudentEvaluation() {
         }
 
         if (!name) {
-            setFieldError(nameInput, "???????????????");
+            setFieldError(nameInput, "กรุณาระบุหัวข้อ");
             hasError = true;
             return;
         }
 
         if (scoreValue === "") {
-            setFieldError(scoreInput, "??????????????");
+            setFieldError(scoreInput, "กรุณาระบุคะแนน");
             hasError = true;
             return;
         }
@@ -277,6 +278,58 @@ async function saveStudentEvaluation() {
     alert("บันทึกผลประเมินเรียบร้อย");
     await loadEvaluation();
     await loadTopics();
+}
+
+async function addTopic() {
+    const name = qs("#evalTopicName").value.trim();
+    const avgRaw = qs("#evalTopicAvg").value.trim();
+    const avgScore = avgRaw === "" ? null : Number(avgRaw);
+    const { year, semester } = getFilters();
+    const directorCode = getDirectorCode();
+
+    if (!name) {
+        alert("กรุณากรอกหัวข้อ");
+        return;
+    }
+    if (avgRaw !== "" && !Number.isFinite(avgScore)) {
+        alert("กรุณากรอกคะแนนเฉลี่ยให้ถูกต้อง");
+        return;
+    }
+    if (Number.isFinite(avgScore) && (avgScore < 0 || avgScore > 5)) {
+        alert("คะแนนเฉลี่ยต้องอยู่ระหว่าง 0 ถึง 5");
+        return;
+    }
+    if (!year || !semester) {
+        alert("กรุณาระบุปีการศึกษาและภาคเรียน");
+        return;
+    }
+
+    const password = window.prompt("กรอกรหัสผ่านผู้อำนวยการเพื่อยืนยัน");
+    if (!password) return;
+
+    const res = await fetch(`${API_BASE}/director/evaluation/topics`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            director_code: directorCode,
+            password,
+            name,
+            year,
+            semester,
+            avg_score: avgScore
+        })
+    });
+
+    const result = await res.json();
+    if (!res.ok) {
+        alert(result?.error || "เพิ่มหัวข้อไม่สำเร็จ");
+        return;
+    }
+
+    qs("#evalTopicName").value = "";
+    qs("#evalTopicAvg").value = "";
+    await loadTopics();
+    await loadEvaluation();
 }
 
 async function handleTopicActions(e) {

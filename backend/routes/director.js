@@ -863,17 +863,81 @@ router.delete("/duty-teachers/:id", async (req, res) => {
 });
 
 // EVALUATION SUMMARY
+async function ensureCompetencyTopicsTable() {
+    await pool.query(
+        `CREATE TABLE IF NOT EXISTS competency_topics (
+            id SERIAL PRIMARY KEY,
+            name TEXT NOT NULL,
+            year INTEGER NOT NULL,
+            semester INTEGER NOT NULL,
+            order_index INTEGER DEFAULT 0,
+            avg_score NUMERIC(5,2),
+            created_at TIMESTAMP DEFAULT NOW(),
+            UNIQUE (name, year, semester)
+        )`
+    );
+    await pool.query(
+        `ALTER TABLE competency_topics
+         ADD COLUMN IF NOT EXISTS avg_score NUMERIC(5,2)`
+    );
+}
+
+async function seedTopicsFromResults(year, semester) {
+    if (!year || !semester) return;
+    const existing = await pool.query(
+        `SELECT COUNT(*) AS total FROM competency_topics WHERE year=$1 AND semester=$2`,
+        [year, semester]
+    );
+    if (Number(existing.rows[0].total || 0) > 0) return;
+
+    const result = await pool.query(
+        `SELECT DISTINCT name
+         FROM competency_results
+         WHERE year=$1 AND semester=$2
+         ORDER BY name ASC`,
+        [year, semester]
+    );
+    if (!result.rows.length) return;
+
+    const params = [];
+    const values = result.rows.map((row, index) => {
+        params.push(row.name, year, semester, index + 1);
+        return `($${params.length - 3},$${params.length - 2},$${params.length - 1},$${params.length})`;
+    });
+    await pool.query(
+        `INSERT INTO competency_topics(name, year, semester, order_index)
+         VALUES ${values.join(", ")}`,
+        params
+    );
+}
+
 router.get("/evaluation/summary", async (req, res) => {
     try {
         const { year, semester } = req.query;
+        await ensureCompetencyTopicsTable();
+        await seedTopicsFromResults(year, semester);
+
+        const params = [];
+        const where = [];
+        if (year) {
+            params.push(year);
+            where.push(`t.year=$${params.length}`);
+        }
+        if (semester) {
+            params.push(semester);
+            where.push(`t.semester=$${params.length}`);
+        }
+
         const result = await pool.query(
-            `SELECT name, ROUND(AVG(score)::numeric, 2) AS avg_score
-             FROM competency_results
-             WHERE ($1::int IS NULL OR year=$1)
-               AND ($2::int IS NULL OR semester=$2)
-             GROUP BY name
-             ORDER BY name ASC`,
-            [year || null, semester || null]
+            `SELECT t.name,
+                    COALESCE(ROUND(AVG(r.score)::numeric, 2), t.avg_score, 0) AS avg_score
+             FROM competency_topics t
+             LEFT JOIN competency_results r
+               ON r.name = t.name AND r.year = t.year AND r.semester = t.semester
+             ${where.length ? `WHERE ${where.join(" AND ")}` : ""}
+             GROUP BY t.name, t.avg_score, t.order_index
+             ORDER BY t.order_index ASC, t.name ASC`,
+            params
         );
         res.json(result.rows);
     } catch (err) {
@@ -885,20 +949,67 @@ router.get("/evaluation/summary", async (req, res) => {
 router.get("/evaluation/topics", async (req, res) => {
     try {
         const { year, semester } = req.query;
+        await ensureCompetencyTopicsTable();
+        await seedTopicsFromResults(year, semester);
+
+        const params = [];
+        const where = [];
+        if (year) {
+            params.push(year);
+            where.push(`t.year=$${params.length}`);
+        }
+        if (semester) {
+            params.push(semester);
+            where.push(`t.semester=$${params.length}`);
+        }
+
         const result = await pool.query(
-            `SELECT name,
-                    ROUND(AVG(score)::numeric, 2) AS avg_score,
-                    COUNT(*) AS total
-             FROM competency_results
-             WHERE ($1::int IS NULL OR year=$1)
-               AND ($2::int IS NULL OR semester=$2)
-             GROUP BY name
-             ORDER BY name ASC`,
-            [year || null, semester || null]
+            `SELECT t.id, t.name, t.year, t.semester,
+                    COALESCE(ROUND(AVG(r.score)::numeric, 2), t.avg_score, 0) AS avg_score,
+                    COUNT(r.score) AS total
+             FROM competency_topics t
+             LEFT JOIN competency_results r
+               ON r.name = t.name AND r.year = t.year AND r.semester = t.semester
+             ${where.length ? `WHERE ${where.join(" AND ")}` : ""}
+             GROUP BY t.id, t.name, t.year, t.semester
+             ORDER BY t.order_index ASC, t.id ASC`,
+            params
         );
         res.json(result.rows);
     } catch (err) {
         console.error("ERROR /director/evaluation/topics:", err);
+        res.status(500).json({ error: "Server error" });
+    }
+});
+
+router.post("/evaluation/topics", async (req, res) => {
+    try {
+        const { director_code, password, name, year, semester, avg_score } = req.body;
+        const auth = await verifyDirectorPassword(director_code, password);
+        if (!auth.ok) return res.status(auth.status).json({ error: auth.message });
+
+        if (!name || !year || !semester) {
+            return res.status(400).json({ error: "กรุณาระบุข้อมูลให้ครบ" });
+        }
+
+        const parsedAvg = avg_score === "" || avg_score === null || typeof avg_score === "undefined"
+            ? null
+            : Number(avg_score);
+
+        await ensureCompetencyTopicsTable();
+        const result = await pool.query(
+            `INSERT INTO competency_topics(name, year, semester, order_index, avg_score)
+             VALUES($1,$2,$3,
+                (SELECT COALESCE(MAX(order_index),0) + 1 FROM competency_topics WHERE year=$2 AND semester=$3)
+             , $4)
+             ON CONFLICT (name, year, semester)
+             DO UPDATE SET avg_score = COALESCE(EXCLUDED.avg_score, competency_topics.avg_score)
+             RETURNING id`,
+            [name, year, semester, Number.isFinite(parsedAvg) ? parsedAvg : null]
+        );
+        res.json({ success: true, id: result.rows[0]?.id || null });
+    } catch (err) {
+        console.error("ERROR /director/evaluation/topics POST:", err);
         res.status(500).json({ error: "Server error" });
     }
 });
@@ -965,13 +1076,22 @@ router.put("/evaluation/topics/rename", async (req, res) => {
             return res.status(400).json({ error: "กรุณาระบุข้อมูลให้ครบ" });
         }
 
+        await ensureCompetencyTopicsTable();
+
+        const topicUpdate = await pool.query(
+            `UPDATE competency_topics
+             SET name=$1
+             WHERE name=$2 AND year=$3 AND semester=$4`,
+            [new_name, old_name, year, semester]
+        );
+
         const result = await pool.query(
             `UPDATE competency_results
              SET name=$1
              WHERE name=$2 AND year=$3 AND semester=$4`,
             [new_name, old_name, year, semester]
         );
-        res.json({ success: true, updated: result.rowCount });
+        res.json({ success: true, updated: result.rowCount, topics: topicUpdate.rowCount });
     } catch (err) {
         console.error("ERROR /director/evaluation/topics/rename:", err);
         res.status(500).json({ error: "Server error" });
@@ -988,11 +1108,17 @@ router.delete("/evaluation/topics", async (req, res) => {
             return res.status(400).json({ error: "กรุณาระบุข้อมูลให้ครบ" });
         }
 
+        await ensureCompetencyTopicsTable();
+
+        const topicDelete = await pool.query(
+            `DELETE FROM competency_topics WHERE name=$1 AND year=$2 AND semester=$3`,
+            [name, year, semester]
+        );
         const result = await pool.query(
             `DELETE FROM competency_results WHERE name=$1 AND year=$2 AND semester=$3`,
             [name, year, semester]
         );
-        res.json({ success: true, deleted: result.rowCount });
+        res.json({ success: true, deleted: result.rowCount, topics: topicDelete.rowCount });
     } catch (err) {
         console.error("ERROR /director/evaluation/topics DELETE:", err);
         res.status(500).json({ error: "Server error" });

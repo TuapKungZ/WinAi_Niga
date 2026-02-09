@@ -24,6 +24,76 @@ async function ensureFeedbackTable() {
     );
 }
 
+async function ensureCompetencyTopicsTable() {
+    await pool.query(
+        `CREATE TABLE IF NOT EXISTS competency_topics (
+            id SERIAL PRIMARY KEY,
+            name TEXT NOT NULL,
+            year INTEGER NOT NULL,
+            semester INTEGER NOT NULL,
+            order_index INTEGER DEFAULT 0,
+            avg_score NUMERIC(5,2),
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            UNIQUE (name, year, semester)
+        )`
+    );
+    await pool.query(
+        `ALTER TABLE competency_topics
+         ADD COLUMN IF NOT EXISTS avg_score NUMERIC(5,2)`
+    );
+}
+
+async function seedTopicsFromResults(year, semester) {
+    if (!year || !semester) return;
+    const existing = await pool.query(
+        `SELECT COUNT(*) AS total FROM competency_topics WHERE year=$1 AND semester=$2`,
+        [year, semester]
+    );
+    if (Number(existing.rows[0].total || 0) > 0) return;
+
+    const result = await pool.query(
+        `SELECT DISTINCT name
+         FROM competency_results
+         WHERE year=$1 AND semester=$2
+         ORDER BY name ASC`,
+        [year, semester]
+    );
+    if (!result.rows.length) return;
+
+    const values = [];
+    const params = [];
+    result.rows.forEach((row, index) => {
+        params.push(row.name, year, semester, index + 1);
+        values.push(`($${params.length - 3},$${params.length - 2},$${params.length - 1},$${params.length})`);
+    });
+    await pool.query(
+        `INSERT INTO competency_topics(name, year, semester, order_index)
+         VALUES ${values.join(", ")}`,
+        params
+    );
+}
+
+router.get("/topics", async (req, res) => {
+    try {
+        const { year, semester } = req.query;
+        await ensureCompetencyTopicsTable();
+        await seedTopicsFromResults(year, semester);
+
+        const result = await pool.query(
+            `SELECT id, name, year, semester, order_index
+             FROM competency_topics
+             WHERE ($1::int IS NULL OR year=$1)
+               AND ($2::int IS NULL OR semester=$2)
+             ORDER BY order_index ASC, id ASC`,
+            [year || null, semester || null]
+        );
+        res.json(result.rows);
+    } catch (err) {
+        console.error("ERROR /evaluation/topics:", err);
+        res.status(500).json({ error: "Server error" });
+    }
+});
+
 router.get("/competency", async (req, res) => {
     const { student_id, year, semester } = req.query;
 

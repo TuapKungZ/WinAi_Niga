@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="th">
 <head>
     <meta charset="UTF-8">
@@ -143,7 +143,19 @@
             <h3>จัดการหัวข้อประเมิน</h3>
             <button class="modal-close" data-modal-close="topicModal">ปิด</button>
         </div>
-        <div style="margin-bottom:12px;"></div>
+        <div class="director-form-grid director-form-grid-tight" style="margin-bottom:12px;">
+            <div>
+                <label>เพิ่มหัวข้อใหม่</label>
+                <input type="text" id="evalTopicName" placeholder="พิมพ์หัวข้อประเมิน">
+            </div>
+            <div>
+                <label>คะแนนเฉลี่ยเริ่มต้น</label>
+                <input type="number" id="evalTopicAvg" placeholder="เช่น 4.50" min="0" max="5" step="0.01">
+            </div>
+            <div class="director-actions">
+                <button class="btn-primary" id="addTopicBtn">เพิ่มหัวข้อ</button>
+            </div>
+        </div>
         <table class="director-table">
             <thead>
                 <tr>
