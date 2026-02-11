@@ -36,17 +36,62 @@ router.get("/sections", async (req, res) => {
     res.json(result.rows);
 });
 
-// เพิ่มวิชาเข้าตะกร้า
+//แก้ที่ registration.js
+// เพิ่มวิชาเข้าตะกร้า (แก้ไขให้เพิ่มทุกคาบเรียนของวิชานั้น)
 router.post("/add", async (req, res) => {
     const { student_id, section_id, year, semester } = req.body;
 
-    const result = await pool.query(
-        `INSERT INTO registrations(student_id, section_id, year, semester, status)
-         VALUES($1,$2,$3,$4,'cart') RETURNING *`,
-        [student_id, section_id, year, semester]
-    );
+    try {
+        // 1. ค้นหาข้อมูลของ section ที่ส่งมาก่อน เพื่อดูว่าเป็นวิชาอะไร ห้องไหน (subject_id, class_level, classroom)
+        const checkQuery = `SELECT subject_id, class_level, classroom 
+                            FROM subject_sections 
+                            WHERE id = $1`;
+        const checkResult = await pool.query(checkQuery, [section_id]);
 
-    res.json(result.rows[0]);
+        if (checkResult.rows.length === 0) {
+            return res.status(404).json({ message: "ไม่พบรายวิชา" });
+        }
+
+        const { subject_id, class_level, classroom } = checkResult.rows[0];
+
+        // 2. Insert ข้อมูลลง registrations โดยดึง "ทุก Section" ที่ตรงเงื่อนไข (วิชาเดียวกัน ห้องเดียวกัน)
+        // ใช้ INSERT INTO ... SELECT ... เพื่อดึงข้อมูลและบันทึกในคำสั่งเดียว
+        const insertQuery = `
+            INSERT INTO registrations(student_id, section_id, year, semester, status)
+            SELECT $1, id, $3, $4, 'cart'
+            FROM subject_sections
+            WHERE subject_id = $2 
+              AND year = $3 
+              AND semester = $4
+              AND class_level = $5 
+              AND classroom = $6
+              -- ป้องกันการเพิ่มซ้ำ: เช็คว่า student_id นี้ยังไม่มี section_id นี้ในตะกร้า
+              AND id NOT IN (
+                  SELECT section_id FROM registrations 
+                  WHERE student_id = $1 AND year = $3 AND semester = $4
+              )
+            RETURNING *
+        `;
+
+        const result = await pool.query(insertQuery, [
+            student_id, 
+            subject_id, 
+            year, 
+            semester, 
+            class_level, 
+            classroom
+        ]);
+
+        res.json({ 
+            success: true, 
+            added_rows: result.rowCount, 
+            data: result.rows 
+        });
+
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Server error during registration" });
+    }
 });
 
 // แสดงตะกร้าลงทะเบียน
