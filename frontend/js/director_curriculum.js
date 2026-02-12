@@ -15,6 +15,13 @@ window.onload = async () => {
     qs("#filterSemester").addEventListener("change", () => loadSections());
     qs("#filterClassroom").addEventListener("change", () => loadSections());
     qs("#filterDay").addEventListener("change", () => loadSections());
+    qs("#modalSubjectSearch").addEventListener("input", () => {
+        // Trigger subject list update when typing
+        const groupSelect = qs("#sectionSubjectGroup");
+        if (groupSelect && typeof groupSelect.onchange === "function") {
+            groupSelect.onchange();
+        }
+    });
     qs("#saveSectionBtn").addEventListener("click", saveSection);
     qs("#resetSectionBtn").addEventListener("click", () => {
         resetForm();
@@ -45,10 +52,19 @@ async function loadRefs() {
 
     function updateSubjectOptions() {
         const selectedGroup = groupSelect.value;
+        const searchKeyword = qs("#modalSubjectSearch")?.value.toLowerCase() || "";
         subSelect.innerHTML = "";
-        const filtered = selectedGroup
+
+        let filtered = selectedGroup
             ? subjects.filter(s => s.subject_group === selectedGroup)
             : subjects;
+
+        if (searchKeyword) {
+            filtered = filtered.filter(s =>
+                (s.subject_code || "").toLowerCase().includes(searchKeyword) ||
+                (s.name || "").toLowerCase().includes(searchKeyword)
+            );
+        }
 
         filtered.forEach((s) => {
             subSelect.innerHTML += `<option value="${s.id}">${s.subject_code} - ${s.name}</option>`;
@@ -196,6 +212,7 @@ function resetForm() {
     qs("#sectionLevel").value = "";
     qs("#sectionRoom").value = "";
     qs("#sectionDay").value = "";
+    qs("#modalSubjectSearch").value = "";
     qs("#sectionTime").value = "";
     qs("#sectionClassroom").value = "";
 }
