@@ -14,6 +14,7 @@ window.onload = async () => {
     qs("#searchSectionBtn").addEventListener("click", () => loadSections());
     qs("#filterSemester").addEventListener("change", () => loadSections());
     qs("#filterClassroom").addEventListener("change", () => loadSections());
+    qs("#filterDay").addEventListener("change", () => loadSections());
     qs("#saveSectionBtn").addEventListener("click", saveSection);
     qs("#resetSectionBtn").addEventListener("click", () => {
         resetForm();
@@ -68,10 +69,12 @@ async function loadSections() {
     const keyword = qs("#sectionSearch")?.value.trim() || "";
     const semester = qs("#filterSemester")?.value || "";
     const classroomValue = qs("#filterClassroom")?.value || "";
+    const dayOfWeek = qs("#filterDay")?.value || "";
 
     const params = new URLSearchParams();
     if (keyword) params.set("search", keyword);
     if (semester) params.set("semester", semester);
+    if (dayOfWeek) params.set("day_of_week", dayOfWeek);
 
     if (classroomValue) {
         const parts = classroomValue.split("/");

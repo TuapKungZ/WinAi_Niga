@@ -535,7 +535,7 @@ router.delete("/subjects/:id", async (req, res) => {
 // SECTIONS / CURRICULUM
 router.get("/sections", async (req, res) => {
     try {
-        const { year, semester, search, class_level, room } = req.query;
+        const { year, semester, search, class_level, room, day_of_week } = req.query;
         const params = [];
         const where = [];
 
@@ -546,6 +546,10 @@ router.get("/sections", async (req, res) => {
         if (semester) {
             params.push(Number(semester));
             where.push(`ss.semester = $${params.length}`);
+        }
+        if (day_of_week) {
+            params.push(day_of_week);
+            where.push(`ss.day_of_week = $${params.length}`);
         }
         if (class_level) {
             params.push(class_level);
