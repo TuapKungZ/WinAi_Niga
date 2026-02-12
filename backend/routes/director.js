@@ -535,7 +535,7 @@ router.delete("/subjects/:id", async (req, res) => {
 // SECTIONS / CURRICULUM
 router.get("/sections", async (req, res) => {
     try {
-        const { year, semester, search } = req.query;
+        const { year, semester, search, class_level, room } = req.query;
         const params = [];
         const where = [];
 
@@ -546,6 +546,14 @@ router.get("/sections", async (req, res) => {
         if (semester) {
             params.push(Number(semester));
             where.push(`ss.semester = $${params.length}`);
+        }
+        if (class_level) {
+            params.push(class_level);
+            where.push(`ss.class_level = $${params.length}`);
+        }
+        if (room) {
+            params.push(room);
+            where.push(`(ss.classroom = $${params.length} OR ss.room = $${params.length})`);
         }
         if (search) {
             params.push(`%${search}%`);

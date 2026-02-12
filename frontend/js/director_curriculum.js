@@ -12,6 +12,8 @@ window.onload = async () => {
         openModal("sectionModal");
     });
     qs("#searchSectionBtn").addEventListener("click", () => loadSections());
+    qs("#filterSemester").addEventListener("change", () => loadSections());
+    qs("#filterClassroom").addEventListener("change", () => loadSections());
     qs("#saveSectionBtn").addEventListener("click", saveSection);
     qs("#resetSectionBtn").addEventListener("click", () => {
         resetForm();
@@ -64,8 +66,21 @@ async function loadRefs() {
 
 async function loadSections() {
     const keyword = qs("#sectionSearch")?.value.trim() || "";
+    const semester = qs("#filterSemester")?.value || "";
+    const classroomValue = qs("#filterClassroom")?.value || "";
+
     const params = new URLSearchParams();
     if (keyword) params.set("search", keyword);
+    if (semester) params.set("semester", semester);
+
+    if (classroomValue) {
+        const parts = classroomValue.split("/");
+        if (parts.length === 2) {
+            params.set("class_level", parts[0]);
+            params.set("room", parts[1]);
+        }
+    }
+
     const res = await fetch(`${API_BASE}/director/sections?${params.toString()}`);
     sections = await res.json();
     if (keyword) {
