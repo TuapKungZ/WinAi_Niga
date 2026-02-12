@@ -1,0 +1,130 @@
+<div class="modal" id="studentModal">
+    <div class="modal-backdrop" data-modal-close="studentModal"></div>
+    <div class="modal-content modal-content-wide">
+        <div class="modal-header">
+            <h4>เพิ่ม / แก้ไข นักเรียน</h4>
+            <button class="modal-close" data-modal-close="studentModal">x</button>
+        </div>
+        <input type="hidden" id="studentId">
+
+        <div class="student-form-section">
+            <div class="student-form-title"><i class="fa-solid fa-id-card"></i> ข้อมูลพื้นฐาน (General Information)
+            </div>
+            <div class="student-form-grid">
+                <div class="student-form-photo">
+                    <div class="photo-box" id="photoBoxClick">
+                        <i class="fa-solid fa-image"></i>
+                        <span>อัปโหลดรูป</span>
+                    </div>
+                    <input type="file" id="studentPhotoFile" accept="image/*" style="display: none;">
+                </div>
+                <div>
+                    <label>รหัสนักเรียน</label>
+                    <input type="text" id="studentCode" placeholder="เช่น 6501001">
+                </div>
+                <div>
+                    <label>วันเกิด</label>
+                    <input type="date" id="studentBirthday">
+                </div>
+                <div>
+                    <label>เบอร์โทรศัพท์</label>
+                    <input type="text" id="studentPhone" placeholder="เบอร์โทรนักเรียน">
+                </div>
+                <div>
+                    <label>คำนำหน้า</label>
+                    <select id="studentPrefix">
+                        <option value="">เลือก...</option>
+                        <option value="ด.ช.">ด.ช.</option>
+                        <option value="ด.ญ.">ด.ญ.</option>
+                        <option value="นาย">นาย</option>
+                        <option value="นางสาว">นางสาว</option>
+                    </select>
+                </div>
+                <div>
+                    <label>ชื่อจริง</label>
+                    <input type="text" id="studentFirst" placeholder="ระบุชื่อจริง">
+                </div>
+                <div>
+                    <label>นามสกุล</label>
+                    <input type="text" id="studentLast" placeholder="ระบุนามสกุล">
+                </div>
+                <div>
+                    <label>เพศ</label>
+                    <select id="studentGender">
+                        <option value="">เลือก...</option>
+                        <option value="ชาย">ชาย</option>
+                        <option value="หญิง">หญิง</option>
+                        <option value="อื่นๆ">อื่นๆ</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="student-form-section">
+            <div class="student-form-title"><i class="fa-solid fa-graduation-cap"></i> ข้อมูลการศึกษา (Academic
+                Info)</div>
+            <div class="student-form-grid">
+                <div>
+                    <label>ระดับชั้น</label>
+                    <select id="studentLevel">
+                        <option value="">เลือก...</option>
+                        <option value="ม.1">มัธยมศึกษาปีที่ 1</option>
+                        <option value="ม.2">มัธยมศึกษาปีที่ 2</option>
+                        <option value="ม.3">มัธยมศึกษาปีที่ 3</option>
+                        <option value="ม.4">มัธยมศึกษาปีที่ 4</option>
+                        <option value="ม.5">มัธยมศึกษาปีที่ 5</option>
+                        <option value="ม.6">มัธยมศึกษาปีที่ 6</option>
+                    </select>
+                </div>
+                <div>
+                    <label>ห้อง</label>
+                    <select id="studentRoom">
+                        <option value="">เลือก...</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                    </select>
+                </div>
+                <div>
+                    <label>สถานะการศึกษา</label>
+                    <select id="studentStatus">
+                        <option value="กำลังศึกษา">กำลังศึกษา</option>
+                        <option value="พักการเรียน">พักการเรียน</option>
+                        <option value="จบการศึกษา">จบการศึกษา</option>
+                    </select>
+                </div>
+                <div>
+                    <label>รหัสผ่าน</label>
+                    <input type="text" id="studentPass" placeholder="เช่น 1234">
+                </div>
+            </div>
+        </div>
+
+        <div class="student-form-section">
+            <div class="student-form-title"><i class="fa-solid fa-address-book"></i> ข้อมูลผู้ติดต่อ (Parent &
+                Contact)</div>
+            <div class="student-form-grid">
+                <div>
+                    <label>ชื่อผู้ปกครอง</label>
+                    <input type="text" id="parentName" placeholder="ชื่อ-นามสกุล">
+                </div>
+                <div>
+                    <label>เบอร์โทรศัพท์ผู้ปกครอง</label>
+                    <input type="text" id="parentPhone" placeholder="เบอร์โทรศัพท์">
+                </div>
+                <div class="student-form-wide">
+                    <label>ที่อยู่ปัจจุบัน</label>
+                    <textarea id="studentAddress" rows="3" placeholder="ระบุที่อยู่ปัจจุบัน"></textarea>
+                </div>
+            </div>
+        </div>
+
+        <div class="director-actions" style="margin-top:14px;">
+            <button class="btn-primary" id="saveStudentBtn">บันทึกข้อมูล</button>
+            <button class="btn-outline" id="resetStudentBtn">ล้างค่า</button>
+        </div>
+    </div>
+</div>

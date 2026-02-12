@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="th">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,33 +9,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 </head>
+
 <body>
 
-    <aside class="sidebar">
-        <div class="logo-section">
-            <div class="logo-icon" data-avatar-role="director"><i class="fa-solid fa-chart-pie"></i></div>
-            <div class="logo-text">
-                <h3>WinAI School</h3>
-                <span>ผู้อำนวยการ</span>
-            </div>
-        </div>
-        <ul class="menu-list">
-            <li><a href="dashboard.html" class="menu-item"><i class="fa-solid fa-chart-pie"></i> แดชบอร์ด</a></li>
-            <li><a href="students.html" class="menu-item"><i class="fa-solid fa-user-graduate"></i> จัดการนักเรียน</a></li>
-            <li><a href="teachers.html" class="menu-item"><i class="fa-solid fa-user-tie"></i> จัดการครู</a></li>
-            <li><a href="advisors.html" class="menu-item"><i class="fa-solid fa-user-check"></i> ครูที่ปรึกษา</a></li>
-            <li><a href="subjects.html" class="menu-item"><i class="fa-solid fa-book"></i> จัดการรายวิชา</a></li>
-            <li><a href="curriculum.html" class="menu-item"><i class="fa-solid fa-layer-group"></i> จัดการตารางสอน</a></li>
-            <li><a href="activities.html" class="menu-item"><i class="fa-solid fa-calendar-check"></i> กิจกรรม</a></li>
-            <li><a href="evaluation.html" class="menu-item"><i class="fa-solid fa-clipboard-check"></i> ประเมินการสอน</a></li>
-            <li><a href="finance.html" class="menu-item"><i class="fa-solid fa-coins"></i> งบประมาณ</a></li>
-            <li><a href="student_count.html" class="menu-item"><i class="fa-solid fa-chart-column"></i> สถิตินักเรียน</a></li>
-            <li><a href="projects.html" class="menu-item"><i class="fa-solid fa-diagram-project"></i> โครงการ</a></li>
-        </ul>
-        <div class="logout-btn" onclick="logoutDirector()">
-            <i class="fa-solid fa-arrow-right-from-bracket"></i> ออกจากระบบ
-        </div>
-    </aside>
+    <div id="sidebar-placeholder"></div>
 
     <main class="main-wrapper director-page project-page">
         <section class="project-hero">
@@ -45,7 +23,8 @@
                     <p class="director-subtitle">ติดตามผลและสรุปโครงการแบบภาพรวม พร้อมข้อมูลเชิงวิเคราะห์</p>
                 </div>
                 <div class="project-actions">
-                    <button class="btn-primary" id="openProjectModalBtn"><i class="fa-solid fa-plus"></i> สร้างโครงการใหม่</button>
+                    <button class="btn-primary" id="openProjectModalBtn"><i class="fa-solid fa-plus"></i>
+                        สร้างโครงการใหม่</button>
                 </div>
             </div>
 
@@ -94,7 +73,8 @@
             </div>
             <div class="project-metric">
                 <div class="metric-head">งบประมาณ (Budget)</div>
-                <div class="metric-value">ใช้ไป <span id="budgetUsed">0</span> / <span id="budgetTotal">0</span> บาท</div>
+                <div class="metric-value">ใช้ไป <span id="budgetUsed">0</span> / <span id="budgetTotal">0</span> บาท
+                </div>
                 <div class="metric-bar"><span id="budgetBar"></span></div>
             </div>
             <div class="project-metric">
@@ -177,4 +157,5 @@
     <script type="module" src="../../js/app.js"></script>
     <script type="module" src="../../js/director_projects.js"></script>
 </body>
+
 </html>

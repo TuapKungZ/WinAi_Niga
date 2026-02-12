@@ -21,16 +21,35 @@ async function uploadProfilePhoto(role, id, file) {
 
 window.onload = async () => {
     requireDirectorLogin();
-    qs("#searchStudentBtn").addEventListener("click", () => loadStudents());
-    qs("#openStudentModalBtn").addEventListener("click", () => {
+
+    // Wait for component to load
+    await new Promise(resolve => setTimeout(resolve, 100));
+
+    const openBtn = qs("#openStudentModalBtn");
+    const saveBtn = qs("#saveStudentBtn");
+    const resetBtn = qs("#resetStudentBtn");
+    const searchBtn = qs("#searchStudentBtn");
+
+    if (searchBtn) searchBtn.addEventListener("click", () => loadStudents());
+    if (openBtn) openBtn.addEventListener("click", () => {
         resetForm();
         openModal("studentModal");
     });
-    qs("#saveStudentBtn").addEventListener("click", saveStudent);
-    qs("#resetStudentBtn").addEventListener("click", () => {
+    if (saveBtn) saveBtn.addEventListener("click", saveStudent);
+    if (resetBtn) resetBtn.addEventListener("click", () => {
         resetForm();
         closeModal("studentModal");
     });
+
+    // Photo box click handler
+    const photoBox = qs("#photoBoxClick");
+    const photoFileInput = qs("#studentPhotoFile");
+    if (photoBox && photoFileInput) {
+        photoBox.addEventListener("click", () => {
+            photoFileInput.click();
+        });
+    }
+
     await loadStudents();
 };
 
@@ -69,7 +88,7 @@ function renderStudents() {
     });
 }
 
-window.editStudent = function(id) {
+window.editStudent = function (id) {
     const s = currentList.find((x) => x.id === id);
     if (!s) return;
     qs("#studentId").value = s.id;
@@ -86,11 +105,10 @@ window.editStudent = function(id) {
     qs("#parentName").value = s.parent_name || "";
     qs("#parentPhone").value = s.parent_phone || "";
     qs("#studentAddress").value = s.address || "";
-    qs("#studentPhoto").value = s.photo_url || "";
     openModal("studentModal");
 };
 
-window.deleteStudent = async function(id) {
+window.deleteStudent = async function (id) {
     if (!confirm("ต้องการลบข้อมูลนักเรียนนี้หรือไม่?")) return;
     await fetch(`${API_BASE}/director/students/${id}`, { method: "DELETE" });
     loadStudents();
@@ -115,7 +133,6 @@ async function saveStudent() {
         parent_name: qs("#parentName").value.trim(),
         parent_phone: qs("#parentPhone").value.trim(),
         address: qs("#studentAddress").value.trim(),
-        photo_url: qs("#studentPhoto").value.trim(),
         password: qs("#studentPass").value.trim()
     };
 
@@ -143,8 +160,7 @@ async function saveStudent() {
 
     if (photoFile && savedId) {
         try {
-            const uploaded = await uploadProfilePhoto("student", savedId, photoFile);
-            qs("#studentPhoto").value = uploaded.url || "";
+            await uploadProfilePhoto("student", savedId, photoFile);
         } catch (err) {
             alert(err.message);
         }
@@ -169,7 +185,6 @@ function resetForm() {
     qs("#parentName").value = "";
     qs("#parentPhone").value = "";
     qs("#studentAddress").value = "";
-    qs("#studentPhoto").value = "";
     if (qs("#studentPhotoFile")) qs("#studentPhotoFile").value = "";
     qs("#studentPass").value = "";
 }

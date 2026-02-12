@@ -1,5 +1,6 @@
 ﻿<!DOCTYPE html>
 <html lang="th">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,142 +8,122 @@
     <link rel="stylesheet" href="../../css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
+
 <body>
 
-<aside class="sidebar">
-        <div class="logo-section">
-            <div class="logo-icon" data-avatar-role="director"><i class="fa-solid fa-chart-pie"></i></div>
-            <div class="logo-text">
-                <h3>WinAI School</h3>
-                <span>ผู้อำนวยการ</span>
-            </div>
-        </div>
-        <ul class="menu-list">
-            <li><a href="dashboard.html" class="menu-item"><i class="fa-solid fa-chart-pie"></i> แดชบอร์ด</a></li>
-            <li><a href="students.html" class="menu-item"><i class="fa-solid fa-user-graduate"></i> จัดการนักเรียน</a></li>
-            <li><a href="teachers.html" class="menu-item"><i class="fa-solid fa-user-tie"></i> จัดการครู</a></li>
-            <li><a href="advisors.html" class="menu-item"><i class="fa-solid fa-user-check"></i> ครูที่ปรึกษา</a></li>
-            <li><a href="subjects.html" class="menu-item"><i class="fa-solid fa-book"></i> จัดการรายวิชา</a></li>
-            <li><a href="curriculum.html" class="menu-item"><i class="fa-solid fa-layer-group"></i> จัดการตารางสอน</a></li>
-            <li><a href="activities.html" class="menu-item"><i class="fa-solid fa-calendar-check"></i> กิจกรรม</a></li>
-            <li><a href="evaluation.html" class="menu-item"><i class="fa-solid fa-clipboard-check"></i> ประเมินการสอน</a></li>
-            <li><a href="finance.html" class="menu-item"><i class="fa-solid fa-coins"></i> งบประมาณ</a></li>
-            <li><a href="student_count.html" class="menu-item active"><i class="fa-solid fa-chart-column"></i> สถิตินักเรียน</a></li>
-            <li><a href="projects.html" class="menu-item"><i class="fa-solid fa-diagram-project"></i> โครงการ</a></li>
-        </ul>
-        <div class="logout-btn" onclick="logoutDirector()">
-            <i class="fa-solid fa-arrow-right-from-bracket"></i> ออกจากระบบ
-        </div>
-    </aside>
+    <div id="sidebar-placeholder"></div>
 
-<main class="main-wrapper director-page">
-    <section class="director-hero">
-        <div>
-            <div class="director-kicker">สถิตินักเรียน</div>
-            <h1 class="director-title">สถิตินักเรียน</h1>
-            <p class="director-subtitle">ติดตามข้อมูลสำคัญและภาพรวมของระบบได้อย่างรวดเร็ว</p>
-        </div>
-        <div class="director-hero-right">
-            <div class="director-hero-cards">
-            <div class="director-hero-card">
-                <div class="director-hero-label">จำนวนนักเรียน</div>
-                <div class="director-hero-value" id="countTotal">0</div>
-                <div class="director-hero-meta">
-                    <div>ชาย: <strong id="countMale">0</strong> คน</div>
-                    <div>หญิง: <strong id="countFemale">0</strong> คน</div>
-                </div>
+    <main class="main-wrapper director-page">
+        <section class="director-hero">
+            <div>
+                <div class="director-kicker">สถิตินักเรียน</div>
+                <h1 class="director-title">สถิตินักเรียน</h1>
+                <p class="director-subtitle">ติดตามข้อมูลสำคัญและภาพรวมของระบบได้อย่างรวดเร็ว</p>
             </div>
-                <div class="director-hero-card">
-                    <div class="director-hero-label">ระดับชั้น</div>
-                    <div class="director-hero-value" id="countLevels">0</div>
-                </div>
-                <div class="director-hero-card">
-                    <div class="director-hero-label">ห้อง</div>
-                    <div class="director-hero-value" id="countRooms">0</div>
-                </div>
-            </div>
-            <div class="director-hero-extra">
-                <div class="director-hero-card">
-                    <div class="director-hero-label">การมา/ขาด/ลา (5 วัน)</div>
-                    <div class="director-hero-meta">
-                        <div>ขาด: <strong id="countAbsent">0</strong> คน</div>
-                        <div>ลา: <strong id="countLeave">0</strong> คน</div>
+            <div class="director-hero-right">
+                <div class="director-hero-cards">
+                    <div class="director-hero-card">
+                        <div class="director-hero-label">จำนวนนักเรียน</div>
+                        <div class="director-hero-value" id="countTotal">0</div>
+                        <div class="director-hero-meta">
+                            <div>ชาย: <strong id="countMale">0</strong> คน</div>
+                            <div>หญิง: <strong id="countFemale">0</strong> คน</div>
+                        </div>
+                    </div>
+                    <div class="director-hero-card">
+                        <div class="director-hero-label">ระดับชั้น</div>
+                        <div class="director-hero-value" id="countLevels">0</div>
+                    </div>
+                    <div class="director-hero-card">
+                        <div class="director-hero-label">ห้อง</div>
+                        <div class="director-hero-value" id="countRooms">0</div>
                     </div>
                 </div>
-                <div class="director-hero-card">
-                    <div class="director-hero-label">มาสาย (5 วัน)</div>
-                    <div class="director-hero-value"><span id="countLate">0</span> คน</div>
+                <div class="director-hero-extra">
+                    <div class="director-hero-card">
+                        <div class="director-hero-label">การมา/ขาด/ลา (5 วัน)</div>
+                        <div class="director-hero-meta">
+                            <div>ขาด: <strong id="countAbsent">0</strong> คน</div>
+                            <div>ลา: <strong id="countLeave">0</strong> คน</div>
+                        </div>
+                    </div>
+                    <div class="director-hero-card">
+                        <div class="director-hero-label">มาสาย (5 วัน)</div>
+                        <div class="director-hero-value"><span id="countLate">0</span> คน</div>
+                    </div>
+                </div>
+                <div class="gender-filter-row" aria-label="ตัวกรองเพศ">
+                    <span class="gender-filter-label">กรองเพศ:</span>
+                    <button class="gender-chip active" data-gender="">👥 ทั้งหมด</button>
+                    <button class="gender-chip" data-gender="male">👦 ชาย</button>
+                    <button class="gender-chip" data-gender="female">👧 หญิง</button>
                 </div>
             </div>
-            <div class="gender-filter-row" aria-label="ตัวกรองเพศ">
-                <span class="gender-filter-label">กรองเพศ:</span>
-                <button class="gender-chip active" data-gender="">👥 ทั้งหมด</button>
-                <button class="gender-chip" data-gender="male">👦 ชาย</button>
-                <button class="gender-chip" data-gender="female">👧 หญิง</button>
-            </div>
-        </div>
-    </section>
+        </section>
 
-    <section class="director-section">
-        <div class="director-section-head">
-            <h3><i class="fa-solid fa-filter"></i> ตัวกรอง</h3>
-            <span class="director-pill">ระดับชั้น / ห้อง</span>
-        </div>
-        <div class="student-count-filter">
-            <div class="advisor-field">
-                <label>ระดับชั้น</label>
-                <select id="filterLevel" class="custom-select">
-                    <option value="">เลือกระดับชั้น</option>
-                    <option value="ม.1">ม.1</option>
-                    <option value="ม.2">ม.2</option>
-                    <option value="ม.3">ม.3</option>
-                    <option value="ม.4">ม.4</option>
-                    <option value="ม.5">ม.5</option>
-                    <option value="ม.6">ม.6</option>
-                </select>
+        <section class="director-section">
+            <div class="director-section-head">
+                <h3><i class="fa-solid fa-filter"></i> ตัวกรอง</h3>
+                <span class="director-pill">ระดับชั้น / ห้อง</span>
             </div>
-            <div class="advisor-field">
-                <label>ห้อง</label>
-                <select id="filterRoom" class="custom-select">
-                    <option value="">เลือกห้อง</option>
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
-                    <option value="6">6</option>
-                </select>
+            <div class="student-count-filter">
+                <div class="advisor-field">
+                    <label>ระดับชั้น</label>
+                    <select id="filterLevel" class="custom-select">
+                        <option value="">เลือกระดับชั้น</option>
+                        <option value="ม.1">ม.1</option>
+                        <option value="ม.2">ม.2</option>
+                        <option value="ม.3">ม.3</option>
+                        <option value="ม.4">ม.4</option>
+                        <option value="ม.5">ม.5</option>
+                        <option value="ม.6">ม.6</option>
+                    </select>
+                </div>
+                <div class="advisor-field">
+                    <label>ห้อง</label>
+                    <select id="filterRoom" class="custom-select">
+                        <option value="">เลือกห้อง</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                    </select>
+                </div>
+                <div class="advisor-actions">
+                    <button class="btn-primary" id="applyFilterBtn">ค้นหา</button>
+                    <button class="btn-outline" id="clearFilterBtn">ล้างค่า</button>
+                </div>
             </div>
-            <div class="advisor-actions">
-                <button class="btn-primary" id="applyFilterBtn">ค้นหา</button>
-                <button class="btn-outline" id="clearFilterBtn">ล้างค่า</button>
-            </div>
-        </div>
-    </section>
+        </section>
 
-    <section class="director-section">
-        <div class="director-section-head">
-            <h3><i class="fa-solid fa-table"></i> สถิตินักเรียน</h3>
-            <span class="director-pill">รายการล่าสุด</span>
-        </div>
-        <div class="table-container">
-            <table class="director-table">
-                <thead>
-                    <tr>
-                        <th>ระดับชั้น</th>
-                        <th>ห้อง</th>
-                        <th>จำนวนนักเรียน</th>
-                    </tr>
-                </thead>
-                <tbody id="studentCountBody">
-                    <tr><td colspan="3" class="center">กำลังโหลด...</td></tr>
-                </tbody>
-            </table>
-        </div>
-    </section>
-</main>
+        <section class="director-section">
+            <div class="director-section-head">
+                <h3><i class="fa-solid fa-table"></i> สถิตินักเรียน</h3>
+                <span class="director-pill">รายการล่าสุด</span>
+            </div>
+            <div class="table-container">
+                <table class="director-table">
+                    <thead>
+                        <tr>
+                            <th>ระดับชั้น</th>
+                            <th>ห้อง</th>
+                            <th>จำนวนนักเรียน</th>
+                        </tr>
+                    </thead>
+                    <tbody id="studentCountBody">
+                        <tr>
+                            <td colspan="3" class="center">กำลังโหลด...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
 
-<script type="module" src="../../js/app.js"></script>
-<script type="module" src="../../js/director_student_count.js"></script>
+    <script type="module" src="../../js/app.js"></script>
+    <script type="module" src="../../js/director_student_count.js"></script>
 </body>
+
 </html>

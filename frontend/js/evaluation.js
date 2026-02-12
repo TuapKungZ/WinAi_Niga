@@ -94,7 +94,7 @@ async function loadEvaluationStatus() {
     if (results.length > 0) {
         statusBox.textContent = "ประเมินแล้ว";
         statusBox.classList.add("done");
-        statusBox.style.background = "#0f766e";
+        statusBox.style.background = "#632b2b";
     } else {
         statusBox.textContent = "รอการประเมิน";
         statusBox.classList.remove("done");

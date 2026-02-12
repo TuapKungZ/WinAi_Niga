@@ -48,7 +48,7 @@ async function loadResults() {
             const displayScore = Number.isFinite(scoreValue) ? (Number.isInteger(scoreValue) ? scoreValue : scoreValue.toFixed(2)) : "-";
             const percent = Number.isFinite(scoreValue) ? (scoreValue / 5) * 100 : 0;
 
-            let color = "#0f766e";
+            let color = "#632b2b";
             if (r.score <= 2) color = "#ef4444";
             else if (r.score == 3) color = "#f59e0b";
 
@@ -144,7 +144,7 @@ async function loadSubjectEvaluation() {
         const displayScore = Number.isFinite(scoreValue) ? (Number.isInteger(scoreValue) ? scoreValue : scoreValue.toFixed(2)) : "-";
         const percent = Number.isFinite(scoreValue) ? (scoreValue / 5) * 100 : 0;
 
-        let color = "#0f766e";
+        let color = "#632b2b";
         if (r.score <= 2) color = "#ef4444";
         else if (r.score == 3) color = "#f59e0b";
 

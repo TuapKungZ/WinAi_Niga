@@ -117,10 +117,15 @@ window.selectSubject = async (subject_id) => {
     const semester = qs("#regSemester").value;
 
     const sections = await loadOpenSections(year, semester);
-    const section = sections.find(s => s.subject_id == subject_id);
+    // BUG FIX: Filter by student's class_level and classroom/room
+    const section = sections.find(s =>
+        s.subject_id == subject_id &&
+        s.class_level == student.class_level &&
+        (String(s.classroom) == String(student.room) || String(s.room) == String(student.room))
+    );
 
     if (!section) {
-        alert("วิชานี้ไม่เปิดสอนในปี/เทอมที่เลือก");
+        alert("วิชานี้ไม่เปิดสอนในระดับชั้นหรือห้องเรียนของคุณ");
         return;
     }
 
@@ -181,14 +186,14 @@ async function loadRegisteredTable() {
 
     tbody.innerHTML = `
         <tr>
-            <td colspan="4" class="center">กำลังโหลด...</td>
+            <td colspan="5" class="center">กำลังโหลด...</td>
         </tr>`;
 
     const items = await loadRegistered(student.id, year, semester);
     if (!items.length) {
         tbody.innerHTML = `
             <tr>
-                <td colspan="4" class="center">ยังไม่มีรายวิชาที่บันทึกแล้ว</td>
+                <td colspan="5" class="center">ยังไม่มีรายวิชาที่บันทึกแล้ว</td>
             </tr>`;
         return;
     }
@@ -201,6 +206,11 @@ async function loadRegisteredTable() {
             <td style="text-align:left;">${item.subject_name}</td>
             <td class="center">${item.credit}</td>
             <td>${item.day_of_week ?? "-"} ${item.time_range ?? ""}</td>
+            <td class="center">
+                <button class="btn-icon delete" onclick="removeRegisteredItem(${item.id})">
+                    <i class="fa-solid fa-trash"></i>
+                </button>
+            </td>
         `;
         tbody.appendChild(tr);
     });
@@ -223,3 +233,10 @@ async function confirmCart() {
     await confirmRegistration(student.id, year, semester);
     await loadCartTable();
 }
+// ลบออกจากวิชาที่บันทึกแล้ว (สำหรับทดสอบ)
+window.removeRegisteredItem = async (id) => {
+    const ok = confirm("ต้องการลบวิชานี้ออกจากรายการที่บันทึกแล้วหรือไม่? (ใช้สำหรับทดสอบระบบ)");
+    if (!ok) return;
+    await removeCartItem(id); // ใช้ API เดียวกับลบจากตะกร้า เพราะ backend ลบจาก registrations โดย ID
+    await loadCartTable();
+};

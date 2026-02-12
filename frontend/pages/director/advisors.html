@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="th">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,104 +8,84 @@
     <link rel="stylesheet" href="../../css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
+
 <body>
 
-<aside class="sidebar">
-        <div class="logo-section">
-            <div class="logo-icon" data-avatar-role="director"><i class="fa-solid fa-chart-pie"></i></div>
-            <div class="logo-text">
-                <h3>WinAI School</h3>
-                <span>ผู้อำนวยการ</span>
-            </div>
-        </div>
-        <ul class="menu-list">
-            <li><a href="dashboard.html" class="menu-item"><i class="fa-solid fa-chart-pie"></i> แดชบอร์ด</a></li>
-            <li><a href="students.html" class="menu-item"><i class="fa-solid fa-user-graduate"></i> จัดการนักเรียน</a></li>
-            <li><a href="teachers.html" class="menu-item"><i class="fa-solid fa-user-tie"></i> จัดการครู</a></li>
-            <li><a href="advisors.html" class="menu-item active"><i class="fa-solid fa-user-check"></i> ครูที่ปรึกษา</a></li>
-            <li><a href="subjects.html" class="menu-item"><i class="fa-solid fa-book"></i> จัดการรายวิชา</a></li>
-            <li><a href="curriculum.html" class="menu-item"><i class="fa-solid fa-layer-group"></i> จัดการตารางสอน</a></li>
-            <li><a href="activities.html" class="menu-item"><i class="fa-solid fa-calendar-check"></i> กิจกรรม</a></li>
-            <li><a href="evaluation.html" class="menu-item"><i class="fa-solid fa-clipboard-check"></i> ประเมินการสอน</a></li>
-            <li><a href="finance.html" class="menu-item"><i class="fa-solid fa-coins"></i> งบประมาณ</a></li>
-            <li><a href="student_count.html" class="menu-item"><i class="fa-solid fa-chart-column"></i> สถิตินักเรียน</a></li>
-            <li><a href="projects.html" class="menu-item"><i class="fa-solid fa-diagram-project"></i> โครงการ</a></li>
-        </ul>
-        <div class="logout-btn" onclick="logoutDirector()">
-            <i class="fa-solid fa-arrow-right-from-bracket"></i> ออกจากระบบ
-        </div>
-    </aside>
+    <div id="sidebar-placeholder"></div>
 
-<main class="main-wrapper director-page">
-    <section class="director-hero">
-        <div>
-            <div class="director-kicker">ครูที่ปรึกษา</div>
-            <h1 class="director-title">ครูที่ปรึกษา</h1>
-            <p class="director-subtitle">ค้นหา และจัดการข้อมูลครูได้อย่างรวดเร็ว</p>
-        </div>
-        <div class="director-hero-cards">
-            <div class="director-hero-card">
-                <div class="director-hero-label">ครูที่ปรึกษา</div>
-                <div class="director-hero-value" id="advisorCount">0</div>
+    <main class="main-wrapper director-page">
+        <section class="director-hero">
+            <div>
+                <div class="director-kicker">ครูที่ปรึกษา</div>
+                <h1 class="director-title">ครูที่ปรึกษา</h1>
+                <p class="director-subtitle">ค้นหา และจัดการข้อมูลครูได้อย่างรวดเร็ว</p>
             </div>
-        </div>
-    </section>
+            <div class="director-hero-cards">
+                <div class="director-hero-card">
+                    <div class="director-hero-label">ครูที่ปรึกษา</div>
+                    <div class="director-hero-value" id="advisorCount">0</div>
+                </div>
+            </div>
+        </section>
 
-    <section class="director-section">
-        <div class="director-section-head">
-            <h3><i class="fa-solid fa-user-check"></i> ครูที่ปรึกษา</h3>
-            <span class="director-pill">ฟอร์มเพิ่มข้อมูล</span>
-        </div>
-        <div class="advisor-form">
-            <div class="advisor-field">
-                <label>ปีการศึกษา</label>
-                <select id="advisorYear" class="custom-select"></select>
+        <section class="director-section">
+            <div class="director-section-head">
+                <h3><i class="fa-solid fa-user-check"></i> ครูที่ปรึกษา</h3>
+                <span class="director-pill">ฟอร์มเพิ่มข้อมูล</span>
             </div>
-            <div class="advisor-field">
-                <label>ภาคเรียน</label>
-                <select id="advisorSemester" class="custom-select">
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                </select>
+            <div class="advisor-form">
+                <div class="advisor-field">
+                    <label>ปีการศึกษา</label>
+                    <select id="advisorYear" class="custom-select"></select>
+                </div>
+                <div class="advisor-field">
+                    <label>ภาคเรียน</label>
+                    <select id="advisorSemester" class="custom-select">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                    </select>
+                </div>
+                <div class="advisor-field">
+                    <label>ระดับชั้น</label>
+                    <select id="advisorClass" class="custom-select"></select>
+                </div>
+                <div class="advisor-field">
+                    <label>ครูที่ปรึกษา</label>
+                    <select id="advisorTeacher" class="custom-select"></select>
+                </div>
+                <div class="advisor-actions">
+                    <button class="btn-primary" id="saveAdvisorBtn">บันทึก</button>
+                </div>
             </div>
-            <div class="advisor-field">
-                <label>ระดับชั้น</label>
-                <select id="advisorClass" class="custom-select"></select>
-            </div>
-            <div class="advisor-field">
-                <label>ครูที่ปรึกษา</label>
-                <select id="advisorTeacher" class="custom-select"></select>
-            </div>
-            <div class="advisor-actions">
-                <button class="btn-primary" id="saveAdvisorBtn">บันทึก</button>
-            </div>
-        </div>
-    </section>
+        </section>
 
-    <section class="director-section">
-        <div class="director-section-head">
-            <h3><i class="fa-solid fa-list"></i> ครูที่ปรึกษา</h3>
-            <span class="director-pill">รายการล่าสุด</span>
-        </div>
-        <div class="table-container">
-            <table class="director-table">
-                <thead>
-                    <tr>
-                        <th>ระดับชั้น</th>
-                        <th>ห้อง</th>
-                        <th>ครูที่ปรึกษา</th>
-                        <th class="center">จัดการ</th>
-                    </tr>
-                </thead>
-                <tbody id="advisorBody">
-                    <tr><td colspan="4" class="center">กำลังโหลด...</td></tr>
-                </tbody>
-            </table>
-        </div>
-    </section>
-</main>
+        <section class="director-section">
+            <div class="director-section-head">
+                <h3><i class="fa-solid fa-list"></i> ครูที่ปรึกษา</h3>
+                <span class="director-pill">รายการล่าสุด</span>
+            </div>
+            <div class="table-container">
+                <table class="director-table">
+                    <thead>
+                        <tr>
+                            <th>ระดับชั้น</th>
+                            <th>ห้อง</th>
+                            <th>ครูที่ปรึกษา</th>
+                            <th class="center">จัดการ</th>
+                        </tr>
+                    </thead>
+                    <tbody id="advisorBody">
+                        <tr>
+                            <td colspan="4" class="center">กำลังโหลด...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
 
-<script type="module" src="../../js/app.js"></script>
-<script type="module" src="../../js/director_advisors.js"></script>
+    <script type="module" src="../../js/app.js"></script>
+    <script type="module" src="../../js/director_advisors.js"></script>
 </body>
+
 </html>

@@ -1,0 +1,157 @@
+<div class="modal" id="teacherModal">
+    <div class="modal-backdrop" data-modal-close="teacherModal"></div>
+    <div class="modal-content modal-content-wide">
+        <div class="modal-header">
+            <h4>เพิ่ม / แก้ไข บุคลากร</h4>
+            <button class="modal-close" data-modal-close="teacherModal">x</button>
+        </div>
+        <input type="hidden" id="teacherId">
+
+        <div class="student-form-section">
+            <div class="student-form-title"><i class="fa-solid fa-id-card"></i> ข้อมูลพื้นฐาน</div>
+            <div class="student-form-grid">
+                <!-- Row 1 & 2: Photo Display and Basic Names -->
+                <div class="student-form-photo" style="grid-row: span 2;">
+                    <div class="photo-box">
+                        <i class="fa-solid fa-image"></i>
+                        <span>อัปโหลดรูป</span>
+                    </div>
+                </div>
+                <div>
+                    <label>คำนำหน้า</label>
+                    <select id="teacherPrefix">
+                        <option value="">เลือก...</option>
+                        <option value="นาย">นาย</option>
+                        <option value="นาง">นาง</option>
+                        <option value="นางสาว">นางสาว</option>
+                    </select>
+                </div>
+                <div>
+                    <label>รหัสบุคลากร</label>
+                    <input type="text" id="teacherCode" placeholder="เช่น T001">
+                </div>
+                <div>
+                    <label>ชื่อจริง</label>
+                    <input type="text" id="teacherFirst" placeholder="ระบุชื่อจริง">
+                </div>
+                <div>
+                    <label>นามสกุล</label>
+                    <input type="text" id="teacherLast" placeholder="ระบุนามสกุล">
+                </div>
+
+                <!-- Row 3: Photo File, ID, and Birthday -->
+                <div>
+                    <label>ไฟล์รูปภาพบุคลากร</label>
+                    <input type="file" id="teacherPhotoFile" accept="image/*" style="padding: 6px;">
+                </div>
+                <div>
+                    <label>เลขบัตรประชาชน</label>
+                    <input type="text" id="teacherNationalId" placeholder="เลขบัตรประชาชน">
+                </div>
+                <div>
+                    <label>วันเกิด</label>
+                    <input type="date" id="teacherBirthday">
+                </div>
+
+                <!-- Row 4: Blood Group, Password, and Gender -->
+                <div>
+                    <label>กรุ๊ปเลือด</label>
+                    <select id="teacherBlood">
+                        <option value="">เลือก...</option>
+                        <option value="A">A</option>
+                        <option value="B">B</option>
+                        <option value="AB">AB</option>
+                        <option value="O">O</option>
+                    </select>
+                </div>
+                <div>
+                    <label>รหัสผ่าน</label>
+                    <input type="text" id="teacherPass" placeholder="เช่น 1234">
+                </div>
+                <div>
+                    <label>เพศ</label>
+                    <select id="teacherGender">
+                        <option value="">เลือก...</option>
+                        <option value="ชาย">ชาย</option>
+                        <option value="หญิง">หญิง</option>
+                        <option value="อื่นๆ">อื่นๆ</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="student-form-section">
+            <div class="student-form-title"><i class="fa-solid fa-briefcase"></i> ข้อมูลตำแหน่ง</div>
+            <div class="student-form-grid">
+                <div>
+                    <label>ประเภทการจ้าง</label>
+                    <select id="teacherEmployment">
+                        <option value="">เลือก...</option>
+                        <option value="ข้าราชการ">ข้าราชการ</option>
+                        <option value="ครูอัตราจ้าง">ครูอัตราจ้าง</option>
+                        <option value="พนักงานราชการ">พนักงานราชการ</option>
+                    </select>
+                </div>
+                <div>
+                    <label>ตำแหน่ง</label>
+                    <input type="text" id="teacherPosition" placeholder="เช่น ครูผู้สอน">
+                </div>
+                <div>
+                    <label>วิทยฐานะ</label>
+                    <input type="text" id="teacherRank" placeholder="เช่น คศ.1">
+                </div>
+                <div>
+                    <label>กลุ่มสาระ/ฝ่าย</label>
+                    <input type="text" id="teacherDepartment" placeholder="เช่น ภาษาไทย">
+                </div>
+                <div>
+                    <label>วันที่บรรจุ</label>
+                    <input type="date" id="teacherStartDate">
+                </div>
+                <div>
+                    <label>วันที่พ้นสภาพ</label>
+                    <input type="date" id="teacherEndDate">
+                </div>
+                <div>
+                    <label>เลขที่ใบอนุญาต</label>
+                    <input type="text" id="teacherLicense" placeholder="เลขใบอนุญาต">
+                </div>
+                <div>
+                    <label>เงินเดือน</label>
+                    <input type="number" id="teacherSalary" placeholder="0.00" step="0.01">
+                </div>
+                <div>
+                    <label>สถานะ</label>
+                    <select id="teacherStatus">
+                        <option value="ปกติ">ปกติ</option>
+                        <option value="พักงาน">พักงาน</option>
+                        <option value="ลาออก">ลาออก</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="student-form-section">
+            <div class="student-form-title"><i class="fa-solid fa-phone"></i> ข้อมูลติดต่อ</div>
+            <div class="student-form-grid">
+                <div>
+                    <label>โทรศัพท์</label>
+                    <input type="text" id="teacherPhone" placeholder="เบอร์โทรศัพท์">
+                </div>
+                <div>
+                    <label>อีเมล</label>
+                    <input type="email" id="teacherEmail" placeholder="name@school.ac.th">
+                </div>
+                <div>
+                    <label>Line ID</label>
+                    <input type="text" id="teacherLine" placeholder="Line ID">
+                </div>
+            </div>
+        </div>
+
+        <div class="director-actions" style="margin-top:14px;">
+            <button class="btn-primary" id="saveTeacherBtn">บันทึกข้อมูล</button>
+            <button class="btn-outline" id="resetTeacherBtn">ล้างค่า</button>
+        </div>
+    </div>
+</div>

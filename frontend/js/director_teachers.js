@@ -1,4 +1,4 @@
-import { requireDirectorLogin, qs, clearFieldErrors, setFieldError, openModal, closeModal } from "./app.js";
+import { requireDirectorLogin, qs, clearFieldErrors, setFieldError, openModal, closeModal, loadComponent } from "./app.js";
 import { API_BASE } from "./config.js";
 
 let currentList = [];
@@ -21,6 +21,7 @@ async function uploadProfilePhoto(role, id, file) {
 
 window.onload = async () => {
     requireDirectorLogin();
+    await loadComponent("../../component/teacher_form.html", "#modalContainer");
     qs("#searchTeacherBtn").addEventListener("click", () => loadTeachers());
     qs("#openTeacherModalBtn").addEventListener("click", () => {
         resetForm();
@@ -66,7 +67,7 @@ function renderTeachers() {
     });
 }
 
-window.editTeacher = function(id) {
+window.editTeacher = function (id) {
     const t = currentList.find((x) => x.id === id);
     if (!t) return;
     qs("#teacherId").value = t.id;
@@ -90,11 +91,12 @@ window.editTeacher = function(id) {
     qs("#teacherPhone").value = t.phone || "";
     qs("#teacherEmail").value = t.email || "";
     qs("#teacherLine").value = t.line_id || "";
-    qs("#teacherPhoto").value = t.photo_url || "";
+    const photoEl = qs("#teacherPhoto");
+    if (photoEl) photoEl.value = t.photo_url || "";
     openModal("teacherModal");
 };
 
-window.deleteTeacher = async function(id) {
+window.deleteTeacher = async function (id) {
     if (!confirm("?????????????????????????????")) return;
     await fetch(`${API_BASE}/director/teachers/${id}`, { method: "DELETE" });
     loadTeachers();
@@ -125,8 +127,8 @@ async function saveTeacher() {
         phone: qs("#teacherPhone").value.trim(),
         email: qs("#teacherEmail").value.trim(),
         line_id: qs("#teacherLine").value.trim(),
-        photo_url: qs("#teacherPhoto").value.trim(),
-        password: qs("#teacherPass").value.trim()
+        photo_url: qs("#teacherPhoto") ? qs("#teacherPhoto").value.trim() : "",
+        password: qs("#teacherPass") ? qs("#teacherPass").value.trim() : ""
     };
 
     if (!payload.teacher_code && !id) {
@@ -154,7 +156,8 @@ async function saveTeacher() {
     if (photoFile && savedId) {
         try {
             const uploaded = await uploadProfilePhoto("teacher", savedId, photoFile);
-            qs("#teacherPhoto").value = uploaded.url || "";
+            const photoEl = qs("#teacherPhoto");
+            if (photoEl) photoEl.value = uploaded.url || "";
         } catch (err) {
             alert(err.message);
         }
@@ -186,7 +189,9 @@ function resetForm() {
     qs("#teacherPhone").value = "";
     qs("#teacherEmail").value = "";
     qs("#teacherLine").value = "";
-    qs("#teacherPhoto").value = "";
+    const photoEl = qs("#teacherPhoto");
+    if (photoEl) photoEl.value = "";
     if (qs("#teacherPhotoFile")) qs("#teacherPhotoFile").value = "";
-    qs("#teacherPass").value = "";
+    const passEl = qs("#teacherPass");
+    if (passEl) passEl.value = "";
 }

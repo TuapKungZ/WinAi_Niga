@@ -61,7 +61,7 @@ async function loadStudentCountChart() {
                     {
                         label: "จำนวนนักเรียน",
                         data,
-                        backgroundColor: "#0f766e",
+                        backgroundColor: "#632b2b",
                         borderRadius: 6
                     }
                 ]

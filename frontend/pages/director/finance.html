@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="th">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,135 +8,113 @@
     <link rel="stylesheet" href="../../css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
+
 <body>
 
-    <aside class="sidebar">
-        <div class="logo-section">
-            <div class="logo-icon" data-avatar-role="director"><i class="fa-solid fa-chart-pie"></i></div>
-            <div class="logo-text">
-                <h3>WinAI School</h3>
-                <span>ผู้อำนวยการ</span>
-            </div>
-        </div>
-        <ul class="menu-list">
-            <li><a href="dashboard.html" class="menu-item"><i class="fa-solid fa-chart-pie"></i> แดชบอร์ด</a></li>
-            <li><a href="students.html" class="menu-item"><i class="fa-solid fa-user-graduate"></i> จัดการนักเรียน</a></li>
-            <li><a href="teachers.html" class="menu-item"><i class="fa-solid fa-user-tie"></i> จัดการครู</a></li>
-            <li><a href="advisors.html" class="menu-item"><i class="fa-solid fa-user-check"></i> ครูที่ปรึกษา</a></li>
-            <li><a href="subjects.html" class="menu-item"><i class="fa-solid fa-book"></i> จัดการรายวิชา</a></li>
-            <li><a href="curriculum.html" class="menu-item"><i class="fa-solid fa-layer-group"></i> จัดการตารางสอน</a></li>
-            <li><a href="activities.html" class="menu-item"><i class="fa-solid fa-calendar-check"></i> กิจกรรม</a></li>
-            <li><a href="evaluation.html" class="menu-item"><i class="fa-solid fa-clipboard-check"></i> ประเมินการสอน</a></li>
-            <li><a href="finance.html" class="menu-item active"><i class="fa-solid fa-coins"></i> งบประมาณ</a></li>
-            <li><a href="student_count.html" class="menu-item"><i class="fa-solid fa-chart-column"></i> สถิตินักเรียน</a></li>
-            <li><a href="projects.html" class="menu-item"><i class="fa-solid fa-diagram-project"></i> โครงการ</a></li>
-        </ul>
-        <div class="logout-btn" onclick="logoutDirector()">
-            <i class="fa-solid fa-arrow-right-from-bracket"></i> ออกจากระบบ
-        </div>
-    </aside>
+    <div id="sidebar-placeholder"></div>
 
-<main class="main-wrapper director-page">
-    <section class="director-hero">
-        <div>
-            <div class="director-kicker">การเงิน</div>
-            <h1 class="director-title">งบประมาณ</h1>
-            <p class="director-subtitle">ติดตามรายรับ รายจ่าย และยอดคงเหลือ</p>
-        </div>
-        <div class="director-hero-cards">
-            <div class="director-hero-card">
-                <div class="director-hero-label">รายรับรวม</div>
-                <div class="director-hero-value" id="financeIncome"></div>
+    <main class="main-wrapper director-page">
+        <section class="director-hero">
+            <div>
+                <div class="director-kicker">การเงิน</div>
+                <h1 class="director-title">งบประมาณ</h1>
+                <p class="director-subtitle">ติดตามรายรับ รายจ่าย และยอดคงเหลือ</p>
             </div>
-            <div class="director-hero-card">
-                <div class="director-hero-label">รายจ่ายรวม</div>
-                <div class="director-hero-value" id="financeExpense"></div>
+            <div class="director-hero-cards">
+                <div class="director-hero-card">
+                    <div class="director-hero-label">รายรับรวม</div>
+                    <div class="director-hero-value" id="financeIncome"></div>
+                </div>
+                <div class="director-hero-card">
+                    <div class="director-hero-label">รายจ่ายรวม</div>
+                    <div class="director-hero-value" id="financeExpense"></div>
+                </div>
+                <div class="director-hero-card">
+                    <div class="director-hero-label">คงเหลือ</div>
+                    <div class="director-hero-value" id="financeBalance"></div>
+                </div>
             </div>
-            <div class="director-hero-card">
-                <div class="director-hero-label">คงเหลือ</div>
-                <div class="director-hero-value" id="financeBalance"></div>
-            </div>
-        </div>
-    </section>
+        </section>
 
-    <section class="director-section">
-        <div class="director-section-head">
-            <h3><i class="fa-solid fa-pen"></i> เพิ่ม / แก้ไข รายการ</h3>
-            <span class="director-pill">รายรับ/รายจ่าย</span>
-        </div>
-        <div class="director-actions">
-            <button class="btn-primary" id="openFinanceModalBtn">เพิ่มรายการ</button>
-        </div>
-    </section>
+        <section class="director-section">
+            <div class="director-section-head">
+                <h3><i class="fa-solid fa-pen"></i> เพิ่ม / แก้ไข รายการ</h3>
+                <span class="director-pill">รายรับ/รายจ่าย</span>
+            </div>
+            <div class="director-actions">
+                <button class="btn-primary" id="openFinanceModalBtn">เพิ่มรายการ</button>
+            </div>
+        </section>
 
-    <section class="director-section">
-        <div class="director-section-head">
-            <h3><i class="fa-solid fa-list"></i> รายการการเงิน</h3>
-            <span class="director-pill">จัดการ</span>
-        </div>
-        <div id="financeTableBox">
-            <table class="director-table">
-                <thead>
-                    <tr>
-                        <th>ชื่อรายการ</th>
-                        <th>หมวดหมู่</th>
-                        <th>ประเภท</th>
-                        <th>วันที่</th>
-                        <th>จำนวนเงิน</th>
-                        <th>จัดการ</th>
-                    </tr>
-                </thead>
-                <tbody id="financeBody"></tbody>
-            </table>
-        </div>
-    </section>
-</main>
+        <section class="director-section">
+            <div class="director-section-head">
+                <h3><i class="fa-solid fa-list"></i> รายการการเงิน</h3>
+                <span class="director-pill">จัดการ</span>
+            </div>
+            <div id="financeTableBox">
+                <table class="director-table">
+                    <thead>
+                        <tr>
+                            <th>ชื่อรายการ</th>
+                            <th>หมวดหมู่</th>
+                            <th>ประเภท</th>
+                            <th>วันที่</th>
+                            <th>จำนวนเงิน</th>
+                            <th>จัดการ</th>
+                        </tr>
+                    </thead>
+                    <tbody id="financeBody"></tbody>
+                </table>
+            </div>
+        </section>
+    </main>
 
-<div class="modal" id="financeModal">
-    <div class="modal-backdrop" data-modal-close="financeModal"></div>
-    <div class="modal-content">
-        <div class="modal-header">
-            <h3>เพิ่ม / แก้ไข รายการ</h3>
-            <button class="modal-close" data-modal-close="financeModal">ปิด</button>
-        </div>
-        <div class="director-form-grid">
-            <input type="hidden" id="financeId">
-            <div>
-                <label>ชื่อรายการ</label>
-                <input type="text" id="financeTitle" placeholder="เช่น ค่าสวัสดิการ">
+    <div class="modal" id="financeModal">
+        <div class="modal-backdrop" data-modal-close="financeModal"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>เพิ่ม / แก้ไข รายการ</h3>
+                <button class="modal-close" data-modal-close="financeModal">ปิด</button>
             </div>
-            <div>
-                <label>หมวดหมู่</label>
-                <input type="text" id="financeCategory" placeholder="เช่น สาธารณูปโภค">
+            <div class="director-form-grid">
+                <input type="hidden" id="financeId">
+                <div>
+                    <label>ชื่อรายการ</label>
+                    <input type="text" id="financeTitle" placeholder="เช่น ค่าสวัสดิการ">
+                </div>
+                <div>
+                    <label>หมวดหมู่</label>
+                    <input type="text" id="financeCategory" placeholder="เช่น สาธารณูปโภค">
+                </div>
+                <div>
+                    <label>จำนวนเงิน</label>
+                    <input type="number" id="financeAmount" placeholder="เช่น 1500">
+                </div>
+                <div>
+                    <label>ประเภท</label>
+                    <select id="financeType">
+                        <option value="income">รายรับ</option>
+                        <option value="expense">รายจ่าย</option>
+                    </select>
+                </div>
+                <div>
+                    <label>วันที่</label>
+                    <input type="date" id="financeDate">
+                </div>
+                <div>
+                    <label>หมายเหตุ</label>
+                    <input type="text" id="financeNote" placeholder="หมายเหตุเพิ่มเติม (ไม่บังคับ)">
+                </div>
             </div>
-            <div>
-                <label>จำนวนเงิน</label>
-                <input type="number" id="financeAmount" placeholder="เช่น 1500">
+            <div class="director-actions" style="margin-top:14px;">
+                <button class="btn-primary" id="saveFinanceBtn">บันทึก</button>
+                <button class="btn-outline" id="resetFinanceBtn">ล้างค่า</button>
             </div>
-            <div>
-                <label>ประเภท</label>
-                <select id="financeType">
-                    <option value="income">รายรับ</option>
-                    <option value="expense">รายจ่าย</option>
-                </select>
-            </div>
-            <div>
-                <label>วันที่</label>
-                <input type="date" id="financeDate">
-            </div>
-            <div>
-                <label>หมายเหตุ</label>
-                <input type="text" id="financeNote" placeholder="หมายเหตุเพิ่มเติม (ไม่บังคับ)">
-            </div>
-        </div>
-        <div class="director-actions" style="margin-top:14px;">
-            <button class="btn-primary" id="saveFinanceBtn">บันทึก</button>
-            <button class="btn-outline" id="resetFinanceBtn">ล้างค่า</button>
         </div>
     </div>
-</div>
 
-<script type="module" src="../../js/app.js"></script>
-<script type="module" src="../../js/director_finance.js"></script>
+    <script type="module" src="../../js/app.js"></script>
+    <script type="module" src="../../js/director_finance.js"></script>
 </body>
+
 </html>

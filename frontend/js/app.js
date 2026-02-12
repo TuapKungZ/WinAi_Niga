@@ -203,6 +203,40 @@ export function closeModal(id) {
     }
 }
 
+export async function loadComponent(url, containerSelector) {
+    const container = document.querySelector(containerSelector);
+    if (!container) return;
+    const res = await fetch(url);
+    const html = await res.text();
+    container.innerHTML = html;
+}
+
+export async function initSidebar(role) {
+    const sidebarPlaceholder = document.getElementById("sidebar-placeholder");
+    if (!sidebarPlaceholder) return;
+
+    // Use absolute-like path from frontend root
+    const pathPrefix = window.location.pathname.includes("/pages/") ? "../../component/" : "./component/";
+    const url = `${pathPrefix}sidebar_${role}.html`;
+
+    await loadComponent(url, "#sidebar-placeholder");
+
+    // Auto-highlight active link
+    const currentPath = window.location.pathname;
+    const items = document.querySelectorAll(".menu-item");
+    items.forEach(item => {
+        const href = item.getAttribute("href");
+        if (href && currentPath.endsWith(href)) {
+            item.classList.add("active");
+        } else {
+            item.classList.remove("active");
+        }
+    });
+
+    // Initialize avatar after sidebar is loaded
+    initAvatar(role);
+}
+
 export function formatDate(dateStr) {
     const d = new Date(dateStr);
     return d.toLocaleDateString("th-TH");
@@ -337,18 +371,23 @@ export function logoutDirector() {
 
 window.logoutDirector = logoutDirector;
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
     if (getTeacher()) {
         document.body.classList.add("teacher-view");
-        initAvatar("teacher");
-    }
-    if (getStudent()) {
+        await initSidebar("teacher");
+    } else if (getStudent()) {
         document.body.classList.add("student-view");
-        initAvatar("student");
-    }
-    if (getDirector()) {
+        await initSidebar("student");
+    } else if (getDirector()) {
         document.body.classList.add("director-view");
-        initAvatar("director");
+        await initSidebar("director");
+    }
+
+    // Load student form component if placeholder exists
+    const studentFormPlaceholder = document.getElementById("student-form-placeholder");
+    if (studentFormPlaceholder) {
+        const pathPrefix = window.location.pathname.includes("/pages/") ? "../../component/" : "./component/";
+        await loadComponent(`${pathPrefix}student_form.html`, "#student-form-placeholder");
     }
 });
 

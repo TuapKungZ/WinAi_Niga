@@ -30,12 +30,33 @@ async function loadRefs() {
     teachers = await teacherRes.json();
 
     const subSelect = qs("#sectionSubject");
+    const groupSelect = qs("#sectionSubjectGroup");
     const teacherSelect = qs("#sectionTeacher");
-    subSelect.innerHTML = "";
-    teacherSelect.innerHTML = "";
-    subjects.forEach((s) => {
-        subSelect.innerHTML += `<option value="${s.id}">${s.subject_code} - ${s.name}</option>`;
+
+    // Extract unique subject groups
+    const groups = [...new Set(subjects.map(s => s.subject_group).filter(Boolean))].sort();
+    groupSelect.innerHTML = `<option value="">ทั้งหมด</option>`;
+    groups.forEach(g => {
+        groupSelect.innerHTML += `<option value="${g}">${g}</option>`;
     });
+
+    function updateSubjectOptions() {
+        const selectedGroup = groupSelect.value;
+        subSelect.innerHTML = "";
+        const filtered = selectedGroup
+            ? subjects.filter(s => s.subject_group === selectedGroup)
+            : subjects;
+
+        filtered.forEach((s) => {
+            subSelect.innerHTML += `<option value="${s.id}">${s.subject_code} - ${s.name}</option>`;
+        });
+    }
+
+    groupSelect.onchange = updateSubjectOptions;
+
+    updateSubjectOptions();
+
+    teacherSelect.innerHTML = "";
     teachers.forEach((t) => {
         teacherSelect.innerHTML += `<option value="${t.id}">${t.teacher_code} - ${t.first_name || ""} ${t.last_name || ""}</option>`;
     });
@@ -80,9 +101,18 @@ function renderSections() {
     });
 }
 
-window.editSection = function(id) {
+window.editSection = function (id) {
     const s = sections.find((x) => x.id === id);
     if (!s) return;
+
+    // Find subject to get its group
+    const sub = subjects.find(x => x.id === s.subject_id);
+    if (sub) {
+        qs("#sectionSubjectGroup").value = sub.subject_group || "";
+        // Manually trigger onchange to update subject list
+        qs("#sectionSubjectGroup").onchange();
+    }
+
     qs("#sectionId").value = s.id;
     qs("#sectionSubject").value = s.subject_id || "";
     qs("#sectionTeacher").value = s.teacher_id || "";
@@ -96,7 +126,7 @@ window.editSection = function(id) {
     openModal("sectionModal");
 };
 
-window.deleteSection = async function(id) {
+window.deleteSection = async function (id) {
     if (!confirm("ต้องการลบตารางสอนนี้หรือไม่?")) return;
     await fetch(`${API_BASE}/director/sections/${id}`, { method: "DELETE" });
     loadSections();
@@ -143,6 +173,8 @@ async function saveSection() {
 
 function resetForm() {
     qs("#sectionId").value = "";
+    qs("#sectionSubjectGroup").value = "";
+    if (qs("#sectionSubjectGroup").onchange) qs("#sectionSubjectGroup").onchange();
     qs("#sectionLevel").value = "";
     qs("#sectionRoom").value = "";
     qs("#sectionDay").value = "";

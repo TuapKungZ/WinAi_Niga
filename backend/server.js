@@ -35,7 +35,16 @@ app.use(express.json());
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+// STATIC FILES
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+// Serve frontend directory
+app.use(express.static(path.join(__dirname, "../frontend")));
+
+// ROOT REDIRECT
+app.get("/", (req, res) => {
+    res.redirect("/pages/login.html");
+});
 
 // ROUTES
 app.use("/api/auth", authRoute);

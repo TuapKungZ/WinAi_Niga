@@ -1,0 +1,110 @@
+﻿[
+  {
+    "id": 2,
+    "subject_code": "α╕º21101",
+    "name": "Basic Science 1",
+    "class_level": "α╕í.1",
+    "classroom": "1",
+    "day_of_week": "α╕₧α╕ñα╕½α╕▒α╕¬α╕Üα╕öα╕╡",
+    "time_range": "12:00-12:50"
+  },
+  {
+    "id": 5,
+    "subject_code": "α╕º21101",
+    "name": "Basic Science 1",
+    "class_level": "α╕í.1",
+    "classroom": "1",
+    "day_of_week": "α╕¡α╕▒α╕çα╕äα╕▓α╕ú",
+    "time_range": "08:00-08:50"
+  },
+  {
+    "id": 99,
+    "subject_code": "α╕º21101",
+    "name": "Basic Science 1",
+    "class_level": "α╕í.1",
+    "classroom": "1",
+    "day_of_week": "α╕¡α╕▒α╕çα╕äα╕▓α╕ú",
+    "time_range": "09:00-09:50"
+  },
+  {
+    "id": 67,
+    "subject_code": "α╕¡21101",
+    "name": "Basic English 1",
+    "class_level": "α╕í.1",
+    "classroom": "1",
+    "day_of_week": "α╕êα╕▒α╕Öα╕ùα╕úα╣î",
+    "time_range": "10:00-10:50"
+  },
+  {
+    "id": 199,
+    "subject_code": "α╕¡21101",
+    "name": "Basic English 1",
+    "class_level": "α╕í.1",
+    "classroom": "1",
+    "day_of_week": "α╕₧α╕╕α╕ÿ",
+    "time_range": "10:00-10:50"
+  },
+  {
+    "id": 81,
+    "subject_code": "α╕¡21101",
+    "name": "Basic English 1",
+    "class_level": "α╕í.1",
+    "classroom": "1",
+    "day_of_week": "α╕¿α╕╕α╕üα╕úα╣î",
+    "time_range": "09:00-09:50"
+  },
+  {
+    "id": 80,
+    "subject_code": "α╕¡21101",
+    "name": "Basic English 1",
+    "class_level": "α╕í.1",
+    "classroom": "2",
+    "day_of_week": "α╕êα╕▒α╕Öα╕ùα╕úα╣î",
+    "time_range": "08:00-08:50"
+  },
+  {
+    "id": 78,
+    "subject_code": "α╕¡21101",
+    "name": "Basic English 1",
+    "class_level": "α╕í.1",
+    "classroom": "2",
+    "day_of_week": "α╕êα╕▒α╕Öα╕ùα╕úα╣î",
+    "time_range": "15:00-15:50"
+  },
+  {
+    "id": 79,
+    "subject_code": "α╕¡21101",
+    "name": "Basic English 1",
+    "class_level": "α╕í.1",
+    "classroom": "2",
+    "day_of_week": "α╕¡α╕▒α╕çα╕äα╕▓α╕ú",
+    "time_range": "12:00-12:50"
+  },
+  {
+    "id": 77,
+    "subject_code": "α╕¡21101",
+    "name": "Basic English 1",
+    "class_level": "α╕í.1",
+    "classroom": "3",
+    "day_of_week": "α╕êα╕▒α╕Öα╕ùα╕úα╣î",
+    "time_range": "09:00-09:50"
+  },
+  {
+    "id": 75,
+    "subject_code": "α╕¡21101",
+    "name": "Basic English 1",
+    "class_level": "α╕í.1",
+    "classroom": "3",
+    "day_of_week": "α╕₧α╕ñα╕½α╕▒α╕¬α╕Üα╕öα╕╡",
+    "time_range": "12:00-12:50"
+  },
+  {
+    "id": 76,
+    "subject_code": "α╕¡21101",
+    "name": "Basic English 1",
+    "class_level": "α╕í.1",
+    "classroom": "3",
+    "day_of_week": "α╕¡α╕▒α╕çα╕äα╕▓α╕ú",
+    "time_range": "09:00-09:50"
+  }
+]
