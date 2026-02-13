@@ -23,6 +23,7 @@ window.onload = async () => {
     requireDirectorLogin();
     await loadComponent("../../component/teacher_form.html", "#modalContainer");
     qs("#searchTeacherBtn").addEventListener("click", () => loadTeachers());
+    qs("#departmentFilter").addEventListener("change", () => loadTeachers());
     qs("#openTeacherModalBtn").addEventListener("click", () => {
         resetForm();
         openModal("teacherModal");
@@ -37,7 +38,8 @@ window.onload = async () => {
 
 async function loadTeachers() {
     const keyword = qs("#teacherSearch").value.trim();
-    const res = await fetch(`${API_BASE}/director/teachers?search=${encodeURIComponent(keyword)}`);
+    const dept = qs("#departmentFilter").value;
+    const res = await fetch(`${API_BASE}/director/teachers?search=${encodeURIComponent(keyword)}&department=${encodeURIComponent(dept)}`);
     currentList = await res.json();
     renderTeachers();
 }

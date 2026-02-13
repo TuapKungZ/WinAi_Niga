@@ -225,14 +225,26 @@ router.delete("/students/:id", async (req, res) => {
 router.get("/teachers", async (req, res) => {
     try {
         await ensureTeacherProfileColumns();
-        const { search } = req.query;
-        const q = search ? `%${search}%` : null;
+        const { search, department } = req.query;
+        const params = [];
+        const where = [];
+
+        if (search) {
+            params.push(`%${search}%`);
+            where.push(`(teacher_code ILIKE $${params.length} OR first_name ILIKE $${params.length} OR last_name ILIKE $${params.length})`);
+        }
+
+        if (department) {
+            params.push(`${department}%`);
+            where.push(`department ILIKE $${params.length}`);
+        }
+
         const result = await pool.query(
             `SELECT id, teacher_code, first_name, last_name, photo_url, prefix, national_id, birthday, gender, blood_group, employment_type, position, academic_rank, department, start_date, end_date, license_no, salary, status, phone, email, line_id
              FROM teachers
-             WHERE ($1::text IS NULL OR teacher_code ILIKE $1 OR first_name ILIKE $1 OR last_name ILIKE $1)
+             ${where.length ? `WHERE ${where.join(" AND ")}` : ""}
              ORDER BY teacher_code ASC`,
-            [q]
+            params
         );
         res.json(result.rows);
     } catch (err) {
